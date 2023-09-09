@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  lab-postgres-compose:
+    image: postgres
+    environment:
+      POSTGRES_USER: "bd1"
+      POSTGRES_PASSWORD: "temp123"
+    ports:
+      - "5433:5432"
+    volumes:
+      - practical_sql:/var/lib/postgresql/data
+    networks:
+      - postgres-compose-network
+    restart: on-failure
+
+  lab-pgadmin-compose:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "bd1@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "temp123"
+    ports:
+      - "5051:80"
+    volumes:
+      - pgadmin_practical:/var/lib/pgadmin
+    depends_on:
+      - lab-postgres-compose
+    networks:
+      - postgres-compose-network
+    restart: on-failure
+
+networks:
+  postgres-compose-network:
+    driver: bridge
+
+volumes:
+  practical_sql:
+    external: true
+  pgadmin_practical:
+    external: true
